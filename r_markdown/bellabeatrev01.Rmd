@@ -3,8 +3,8 @@ title: "Bellabeat"
 author: "Assad Jawaid"
 date: "2025-02-17"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 
@@ -26,7 +26,7 @@ FitBit Fitness Tracker Data (CC0: Public domain)[Link](https://www.kaggle.com/da
 ### Set Up
 
 Spruce up the outputs
-```{r kableVersion,echo=FALSE}
+```{r kableVersion,echo=TRUE}
 library(kableExtra)
 ```
 
@@ -205,7 +205,7 @@ kable(colSums(is.na(daily_sleep_weight)))
 
 ### Visualize NANs
 ```{r, include=TRUE, echo=TRUE}
-md.pattern(daily_sleep_weight, plot = TRUE)
+nan_table <- md.pattern(daily_sleep_weight, plot = TRUE)
 ```
 
 ### Use kNN to create impute value columns
@@ -215,7 +215,7 @@ impute_columns <- c("total_steps", "total_distance", "tracker_distance",
                     "moderately_active_distance", "light_active_distance", 
                     "sedentary_active_distance", "very_active_minutes", 
                     "fairly_active_minutes", "lightly_active_minutes", "sedentary_minutes", 
-                    "calories", "total_sleep_records", "total_minutes_asleep", "total_time_in_bed", 
+                    "calories", "total_sleep_records.x", "total_minutes_asleep.x", "total_time_in_bed.x", 
                     "weight_kg", "weight_pounds", "bmi", "is_manual_report", "log_id", "fat")
 ```
 
@@ -227,19 +227,19 @@ imputed_data <- kNN(daily_sleep_weight, variable = impute_columns)
 ### Plot graphs comparing weight to daily activities and sleeping time
 ```{r, include=TRUE, echo=FALSE}
 ## Total Time in Bed by Weight(kg)
-ggplot(imputed_data, aes(x=total_time_in_bed, y=weight_kg)) + geom_point(color="#8B4513") + 
+ggplot(imputed_data, aes(x=total_time_in_bed.x, y=weight_kg)) + geom_point(color="#8B4513") + 
   geom_jitter(color="#8B4513") + labs(title = "Total Time in Bed by Weight (kg)", 
     x="weight (kg)", y="total time in bed") + theme_minimal()
 
 ## Lightly Active Minutes over Total Sleep Minutes Asleep
-ggplot(imputed_data, aes(x=lightly_active_minutes, y=total_minutes_asleep)) + 
+ggplot(imputed_data, aes(x=lightly_active_minutes, y=total_minutes_asleep.x)) + 
   geom_point(color="#8B0A50") + geom_jitter(color="#8B0A50")+ labs(title = "Lightly Active Mins over Total Mins Asleep", 
                     x="Lightly Active Mins", y="Total Mins Asleep") + 
   theme_minimal()
 ```
 From the looks of it, the first scatter plot shows there is zero correlation between total time spent in bed and user's weight. Even having imputed the missing values, zero relationship can be found in this data set. 
 
-The second scatter plot depicts a strong cluster between 400 to 600 minutes of sleep with most light activity minutes under 400 minutes. Overall, again the scatterplot shows us that both total minutes asleep and light active minutes are independent from one another. 
+The second scatter plot depicts a strong cluster between 400 to 600 minutes of sleep with most light activity minutes under 400 minutes. Overall, again the scatter plot shows us that both total minutes asleep and light active minutes are independent from one another. 
 
 
 ## Summary and recommendations based on findings ##
