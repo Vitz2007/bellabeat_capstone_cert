@@ -1,2 +1,2 @@
-# bellabeat_capstone_cert
-Coursera: Google Analytics Capstone Project
+# Coursera: Google Analytics Capstone Project
+
