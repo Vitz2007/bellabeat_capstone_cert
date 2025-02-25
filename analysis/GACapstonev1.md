@@ -133,6 +133,9 @@ ggarrange(ggplot(daily_activity, aes(x=very_active_minutes, y=total_distance)) +
                                                                                                    x="Very Active Minutes", y="Total Steps") + 
             theme_minimal()) # Both plots show users very active between 0 to 75 mins
 ```
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/02scatterplot%20of%20correlated%20columns.png" />
+
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/03total%20distance%20and%20steps%20over%20very%20active%20minutes.png" />
 
 # Plot total distance and total steps on a given day
 ``` r
@@ -142,6 +145,7 @@ ggarrange(ggplot(daily_activity, aes(x=day_of_week, y=total_distance)) + geom_co
             geom_col(fill = c("blue")) + labs(title = "Total Steps for Days", x="Day of Week", y="Total Steps") + 
             theme_bw()) # Looks like Tuesday seems to be the most active day for users
 ```
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/04total%20distance%20and%20steps%20for%20days.png" />
 
 # Calculate y-intercept for sleep_days data set
 ``` r
@@ -159,6 +163,7 @@ ggplot(sleep_days, aes(x=day_of_week, y=total_time_in_bed)) + geom_col(fill = c(
   labs(title = "Minutes in Bed by Day", x="", y="") 
 + theme_bw()) # Wednesday seems to the day where people slept a lot and stayed in bed
 ```
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/05mins%20asleep%20and%20in%20bed%20by%20day%20y-intercept.png" />
 
 # Get insights for weight_log, sleep_days, and daily activity data sets
 ``` r
@@ -177,6 +182,7 @@ kable(colSums(is.na(daily_sleep_weight)))
 ``` r
 nan_table <- md.pattern(daily_sleep_weight, plot = TRUE, rotate.names = TRUE)
 ```
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/visual%20of%20NANs%20mdpattern.png" />
 
 # Use kNN to create impute value columns
 ``` r
@@ -207,3 +213,6 @@ ggplot(imputed_data, aes(x=lightly_active_minutes, y=total_minutes_asleep)) +
                     x="Lightly Active Mins", y="Total Mins Asleep") + 
   theme_minimal() # Scatter plots show majority of people slept over 500 mins and had between 100-300 of lightly active mins
 ```
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/06time%20in%20bed%20by%20weight.png" />
+
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/07lightly%20active%20min%20over%20mins%20asleep.png" />
