@@ -132,8 +132,8 @@ corrmatrices <- select(daily_activity, total_steps, total_distance, tracker_dist
   cor()
 kable(head(round(corrmatrices,2)))
 
-corrplot(corrmatrices, method = "number", type = "upper", addCoef.col = "black", tl.col = "black", 
-         tl.srt = 90, tl.cex = 0.50)
+corrplot(corrmatrices, method = "number", type = "lower", addCoef.col = "black", tl.col = "black", 
+         tl.srt = 70, tl.cex = 0.50)
 ```
 We can see strong positive correlations between total_steps, total_distance, and tracker_distance which might be measuring the same thing, so we will use a couple of them. Also we see high activity levels for very_active and fairly_active. However sedentary time has very little correlation from activity levels. 
 
