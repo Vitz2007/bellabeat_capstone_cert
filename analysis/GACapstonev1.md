@@ -1,4 +1,5 @@
 # Install packages
+``` r 
 install.packages('tidyverse')
 install.packages('tidyr')
 install.packages('skimr')
@@ -10,8 +11,10 @@ install.packages('VIM')
 install.packages('mice')
 install.packages('reshape')
 install.packages('kableExtra')
+```
 
 # Load libraries
+``` r
 library(tidyverse) # Cleaning dataset
 library(tidyr)
 library(skimr)
@@ -22,26 +25,34 @@ library(ggpubr) # plot graphs side by side
 library(VIM) # use to impute NAs
 library(mice) # use to visualize NAs
 library(kableExtra) # make outputs cleaner
+```
 
-# Import data sets 
+# Import data sets
+``` r
 daily_activity <- read.csv("/Users/apple/GA Capstone/dailyActivity_merged.csv")
 daily_steps <- read.csv("/Users/apple/GA Capstone/dailySteps_merged.csv")
 sleep_days <- read.csv("/Users/apple/GA Capstone/sleepDay_merged.csv")
 weight_log <- read.csv("/Users/apple/GA Capstone/weightLogInfo_merged.csv")
+```
 
 # Overview of data
+``` r
 kable(head(daily_activity))
 kable(head(daily_steps))
 kable(head(sleep_days))
 kable(head(weight_log))
+```
 
 # Make column names consistent
+``` r
 daily_activity <- clean_names(daily_activity)
 daily_steps <-clean_names(daily_steps)
 sleep_days <- clean_names(sleep_days)
 weight_log <- clean_names(weight_log)
+```
 
 # Change date and time to datetime standard
+``` r
 daily_activity <- daily_activity %>%
   rename(date = activity_date) %>%
   mutate(date = as_date(date, format = "%m/%d/%Y"))
@@ -87,9 +98,11 @@ daily_steps <- daily_steps %>%
 sleep_days <- sleep_days %>%
   distinct() %>%
   drop_na()
+```
 
 # Find correlation for 'daily_activity' data set using correlation plot
 # Select columns with numerical data
+``` r
 corrmatrices <- select(daily_activity, total_steps, total_distance, tracker_distance, 
                        very_active_distance, moderately_active_distance, light_active_distance, 
                        sedentary_active_distance, very_active_minutes, fairly_active_minutes, 
@@ -99,8 +112,11 @@ kable(head(round(corrmatrices,2)))
 
 corrplot(corrmatrices, method = "number", type = "lower", addCoef.col = "black", tl.col = "black", 
          tl.srt = 70, tl.cex = 0.50) # Columns 'very_active_distance' and 'very_active_minutes' have high correlation to other columns
+```
+https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/01correlation_plot.png
 
 # Create plots based on columns with strong correlation
+``` r
 ggarrange(ggplot(daily_activity, aes(x=very_active_distance, y=total_distance)) + 
   geom_point(color = "#800080") + geom_jitter(color = "#800080") + geom_smooth(color="green") + 
   labs(title = "Total Distance over Very Active Distance", x="Very Active Distance", y="Total Distance") + 
@@ -116,19 +132,25 @@ ggarrange(ggplot(daily_activity, aes(x=very_active_minutes, y=total_distance)) +
             geom_point(color = "#FF7F50") + geom_jitter(color = "#FF7F50") + geom_smooth(color = "green") + labs(title = "Total Steps over Very Active Minutes", 
                                                                                                    x="Very Active Minutes", y="Total Steps") + 
             theme_minimal()) # Both plots show users very active between 0 to 75 mins
+```
 
 # Plot total distance and total steps on a given day
+``` r
 ggarrange(ggplot(daily_activity, aes(x=day_of_week, y=total_distance)) + geom_col(fill = c("green")) + 
             labs(title = "Total Distance for Days", x="Day of Week", y="Total Distance") + 
             theme_bw(), ggplot(daily_activity, aes(x=day_of_week, y=total_steps)) + 
             geom_col(fill = c("blue")) + labs(title = "Total Steps for Days", x="Day of Week", y="Total Steps") + 
             theme_bw()) # Looks like Tuesday seems to be the most active day for users
+```
 
 # Calculate y-intercept for sleep_days data set
+``` r
 model <- lm(total_minutes_asleep~total_time_in_bed, data = sleep_days)
 y_intercept <- coef(model)[1]
+```
 
 # Create plot with y-intercept showing minutes asleep and in bed on given day
+``` r
 ggarrange(ggplot(sleep_days, aes(x=day_of_week, y=total_minutes_asleep)) + 
             geom_col(fill = c("orange")) 
           + geom_hline(yintercept = y_intercept, linetype = "dashed", color = "black") + labs(title = "Minutes Asleep by Day", x="", y="") + theme_bw(), 
@@ -136,20 +158,28 @@ ggplot(sleep_days, aes(x=day_of_week, y=total_time_in_bed)) + geom_col(fill = c(
   geom_hline(yintercept = y_intercept, linetype = "dashed", color = "black") + 
   labs(title = "Minutes in Bed by Day", x="", y="") 
 + theme_bw()) # Wednesday seems to the day where people slept a lot and stayed in bed
+```
 
 # Get insights for weight_log, sleep_days, and daily activity data sets
+``` r
 daily_sleep_weight <- merge(x=daily_activity, y=weight_log, by=c(
   "id", "date", "day_of_week"), all.x=TRUE, all.y=TRUE)
 daily_sleep_weight <- merge(x=daily_sleep_weight, y=sleep_days, by=c(
   "id", "date", "day_of_week"), all.x=TRUE, all.y=TRUE)
+```
 
 # Check NANs
+``` r
 kable(colSums(is.na(daily_sleep_weight)))
+```
 
 # Visual overview of NANs
+``` r
 nan_table <- md.pattern(daily_sleep_weight, plot = TRUE, rotate.names = TRUE)
+```
 
 # Use kNN to create impute value columns
+``` r
 impute_columns <- c("total_steps", "total_distance", "tracker_distance", 
                     "logged_activities_distance", "very_active_distance", 
                     "moderately_active_distance", "light_active_distance", 
@@ -157,11 +187,15 @@ impute_columns <- c("total_steps", "total_distance", "tracker_distance",
                     "fairly_active_minutes", "lightly_active_minutes", "sedentary_minutes", 
                     "calories", "total_sleep_records", "total_minutes_asleep", "total_time_in_bed", 
                     "weight_kg", "weight_pounds", "bmi", "is_manual_report", "log_id", "fat")
+```
 
 # Impute missing values from columns using kNN
+``` r
 imputed_data <- kNN(daily_sleep_weight, variable = impute_columns)
+```
 
 # Plot graphs comparing weight to daily activities and sleeping time
+``` r
 # Total Time in Bed by Weight(kg)
 ggplot(imputed_data, aes(x=total_time_in_bed, y=weight_kg)) + geom_point(color="#8B4513") + 
   geom_jitter(color="#8B4513") + labs(title = "Total Time in Bed by Weight (kg)", 
@@ -172,4 +206,4 @@ ggplot(imputed_data, aes(x=lightly_active_minutes, y=total_minutes_asleep)) +
   geom_point(color="#8B0A50") + geom_jitter(color="#8B0A50")+ labs(title = "Lightly Active Mins over Total Mins Asleep", 
                     x="Lightly Active Mins", y="Total Mins Asleep") + 
   theme_minimal() # Scatter plots show majority of people slept over 500 mins and had between 100-300 of lightly active mins
-
+```
