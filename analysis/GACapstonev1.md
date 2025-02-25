@@ -113,7 +113,7 @@ kable(head(round(corrmatrices,2)))
 corrplot(corrmatrices, method = "number", type = "lower", addCoef.col = "black", tl.col = "black", 
          tl.srt = 70, tl.cex = 0.50) # Columns 'very_active_distance' and 'very_active_minutes' have high correlation to other columns
 ```
-https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/01correlation_plot.png
+<img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/01correlation_plot.png" />
 
 # Create plots based on columns with strong correlation
 ``` r
