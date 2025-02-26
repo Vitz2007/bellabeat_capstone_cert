@@ -1,4 +1,4 @@
-# Install packages
+## Install packages
 ``` r 
 install.packages('tidyverse')
 install.packages('tidyr')
@@ -13,7 +13,7 @@ install.packages('reshape')
 install.packages('kableExtra')
 ```
 
-# Load libraries
+## Load libraries
 ``` r
 library(tidyverse) # Cleaning dataset
 library(tidyr)
@@ -27,7 +27,7 @@ library(mice) # use to visualize NAs
 library(kableExtra) # make outputs cleaner
 ```
 
-# Import data sets
+## Import data sets
 ``` r
 daily_activity <- read.csv("/Users/apple/GA Capstone/dailyActivity_merged.csv")
 daily_steps <- read.csv("/Users/apple/GA Capstone/dailySteps_merged.csv")
@@ -35,7 +35,7 @@ sleep_days <- read.csv("/Users/apple/GA Capstone/sleepDay_merged.csv")
 weight_log <- read.csv("/Users/apple/GA Capstone/weightLogInfo_merged.csv")
 ```
 
-# Overview of data
+## Overview of data
 ``` r
 kable(head(daily_activity))
 kable(head(daily_steps))
@@ -43,7 +43,7 @@ kable(head(sleep_days))
 kable(head(weight_log))
 ```
 
-# Make column names consistent
+## Make column names consistent
 ``` r
 daily_activity <- clean_names(daily_activity)
 daily_steps <-clean_names(daily_steps)
@@ -51,7 +51,7 @@ sleep_days <- clean_names(sleep_days)
 weight_log <- clean_names(weight_log)
 ```
 
-# Change date and time to datetime standard
+## Change date and time to datetime standard
 ``` r
 daily_activity <- daily_activity %>%
   rename(date = activity_date) %>%
@@ -100,8 +100,8 @@ sleep_days <- sleep_days %>%
   drop_na()
 ```
 
-# Find correlation for 'daily_activity' data set using correlation plot
-# Select columns with numerical data
+## Find correlation for 'daily_activity' data set using correlation plot
+### Select columns with numerical data
 ``` r
 corrmatrices <- select(daily_activity, total_steps, total_distance, tracker_distance, 
                        very_active_distance, moderately_active_distance, light_active_distance, 
@@ -117,7 +117,7 @@ corrplot(corrmatrices, method = "number", type = "lower", addCoef.col = "black",
 
 We can see strong positive correlations between total_steps, total_distance, and tracker_distance which might be measuring the same thing, so we will use a couple of them. Also we see high activity levels for very_active and fairly_active. However sedentary time has very little correlation from activity levels. 
 
-# Create plots based on columns with strong correlation
+## Create plots based on columns with strong correlation
 ``` r
 ggarrange(ggplot(daily_activity, aes(x=very_active_distance, y=total_distance)) + 
   geom_point(color = "#800080") + geom_jitter(color = "#800080") + geom_smooth(color="green") + 
@@ -143,7 +143,7 @@ The curvature in the first set of scatter plots shows a positive correlation, ho
 
 The second set of scatter plots shows data points more concentrated in the 0-75 minute range indicating that most users have very active periods within this time frame. The confidence interval tells us that there is a margin of error surrounding the green line. In total, the plots indicate that being very active for a short time has a big impact on total distance and total steps. 
 
-# Plot total distance and total steps on a given day
+## Plot total distance and total steps on a given day
 ``` r
 ggarrange(ggplot(daily_activity, aes(x=day_of_week, y=total_distance)) + geom_col(fill = c("green")) + 
             labs(title = "Total Distance for Days", x="Day of Week", y="Total Distance") + 
@@ -155,13 +155,13 @@ ggarrange(ggplot(daily_activity, aes(x=day_of_week, y=total_distance)) + geom_co
 
 Both bar graphs show that there is a strong correlation between steps and distance. We can understand from these that users were most active on Tuesday and then became less active winding down to Friday. A spike occurs on Saturday possibly around the daytime leading to a quiet Sunday. We can summarize that weekdays tend to be more active than weekends.
 
-# Calculate y-intercept for sleep_days data set
+## Calculate y-intercept for sleep_days data set
 ``` r
 model <- lm(total_minutes_asleep~total_time_in_bed, data = sleep_days)
 y_intercept <- coef(model)[1]
 ```
 
-# Create plot with y-intercept showing minutes asleep and in bed on given day
+## Create plot with y-intercept showing minutes asleep and in bed on given day
 ``` r
 ggarrange(ggplot(sleep_days, aes(x=day_of_week, y=total_minutes_asleep)) + 
             geom_col(fill = c("orange")) 
@@ -176,7 +176,7 @@ ggplot(sleep_days, aes(x=day_of_week, y=total_time_in_bed)) + geom_col(fill = c(
 Here we can see that both bar graphs depict that the highest amount of sleep time and time in bed happens on Wednesday and Thursday. There seems to be a noticeable pattern where users spend more time in bed rather than sleeping, possibly due to smartphone usage, difficult falling asleep, or some other factor. What we can gather is that people tend to sleep less on Monday with increase in sleep duration by mid week. 
 
 
-# Get insights for weight_log, sleep_days, and daily activity data sets
+## Get insights for weight_log, sleep_days, and daily activity data sets
 ``` r
 daily_sleep_weight <- merge(x=daily_activity, y=weight_log, by=c(
   "id", "date", "day_of_week"), all.x=TRUE, all.y=TRUE)
@@ -184,18 +184,18 @@ daily_sleep_weight <- merge(x=daily_sleep_weight, y=sleep_days, by=c(
   "id", "date", "day_of_week"), all.x=TRUE, all.y=TRUE)
 ```
 
-# Check NANs
+## Check NANs
 ``` r
 kable(colSums(is.na(daily_sleep_weight)))
 ```
 
-# Visual overview of NANs
+## Visual overview of NANs
 ``` r
 nan_table <- md.pattern(daily_sleep_weight, plot = TRUE, rotate.names = TRUE)
 ```
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/visual%20of%20NANs%20mdpattern.png" />
 
-# Use kNN to create impute value columns
+## Use kNN to create impute value columns
 ``` r
 impute_columns <- c("total_steps", "total_distance", "tracker_distance", 
                     "logged_activities_distance", "very_active_distance", 
@@ -206,12 +206,12 @@ impute_columns <- c("total_steps", "total_distance", "tracker_distance",
                     "weight_kg", "weight_pounds", "bmi", "is_manual_report", "log_id", "fat")
 ```
 
-# Impute missing values from columns using kNN
+## Impute missing values from columns using kNN
 ``` r
 imputed_data <- kNN(daily_sleep_weight, variable = impute_columns)
 ```
 
-# Plot graphs comparing weight to daily activities and sleeping time
+## Plot graphs comparing weight to daily activities and sleeping time
 ``` r
 # Total Time in Bed by Weight(kg)
 ggplot(imputed_data, aes(x=total_time_in_bed, y=weight_kg)) + geom_point(color="#8B4513") + 
