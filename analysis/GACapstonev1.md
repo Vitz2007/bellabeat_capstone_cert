@@ -115,6 +115,8 @@ corrplot(corrmatrices, method = "number", type = "lower", addCoef.col = "black",
 ```
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/01correlation_plot.png" />
 
+We can see strong positive correlations between total_steps, total_distance, and tracker_distance which might be measuring the same thing, so we will use a couple of them. Also we see high activity levels for very_active and fairly_active. However sedentary time has very little correlation from activity levels. 
+
 # Create plots based on columns with strong correlation
 ``` r
 ggarrange(ggplot(daily_activity, aes(x=very_active_distance, y=total_distance)) + 
@@ -137,6 +139,10 @@ ggarrange(ggplot(daily_activity, aes(x=very_active_minutes, y=total_distance)) +
 
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/03total%20distance%20and%20steps%20over%20very%20active%20minutes.png" />
 
+The curvature in the first set of scatter plots shows a positive correlation, however a very strong relation can be seen in the 0-5 range of Very Active Distance. We can assume that people who are very active naturally cover more ground or distance and have more steps.
+
+The second set of scatter plots shows data points more concentrated in the 0-75 minute range indicating that most users have very active periods within this time frame. The confidence interval tells us that there is a margin of error surrounding the green line. In total, the plots indicate that being very active for a short time has a big impact on total distance and total steps. 
+
 # Plot total distance and total steps on a given day
 ``` r
 ggarrange(ggplot(daily_activity, aes(x=day_of_week, y=total_distance)) + geom_col(fill = c("green")) + 
@@ -146,6 +152,8 @@ ggarrange(ggplot(daily_activity, aes(x=day_of_week, y=total_distance)) + geom_co
             theme_bw()) # Looks like Tuesday seems to be the most active day for users
 ```
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/04total%20distance%20and%20steps%20for%20days.png" />
+
+Both bar graphs show that there is a strong correlation between steps and distance. We can understand from these that users were most active on Tuesday and then became less active winding down to Friday. A spike occurs on Saturday possibly around the daytime leading to a quiet Sunday. We can summarize that weekdays tend to be more active than weekends.
 
 # Calculate y-intercept for sleep_days data set
 ``` r
@@ -164,6 +172,9 @@ ggplot(sleep_days, aes(x=day_of_week, y=total_time_in_bed)) + geom_col(fill = c(
 + theme_bw()) # Wednesday seems to the day where people slept a lot and stayed in bed
 ```
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/05mins%20asleep%20and%20in%20bed%20by%20day%20y-intercept.png" />
+
+Here we can see that both bar graphs depict that the highest amount of sleep time and time in bed happens on Wednesday and Thursday. There seems to be a noticeable pattern where users spend more time in bed rather than sleeping, possibly due to smartphone usage, difficult falling asleep, or some other factor. What we can gather is that people tend to sleep less on Monday with increase in sleep duration by mid week. 
+
 
 # Get insights for weight_log, sleep_days, and daily activity data sets
 ``` r
@@ -216,3 +227,28 @@ ggplot(imputed_data, aes(x=lightly_active_minutes, y=total_minutes_asleep)) +
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/06time%20in%20bed%20by%20weight.png" />
 
 <img src="https://github.com/Vitz2007/bellabeat_capstone_cert/blob/main/images/07lightly%20active%20min%20over%20mins%20asleep.png" />
+
+From the looks of it, the first scatter plot shows there is zero correlation between total time spent in bed and user's weight. Even having imputed the missing values, zero relationship can be found in this data set. 
+
+The second scatter plot depicts a strong cluster between 400 to 600 minutes of sleep with most light activity minutes under 400 minutes. Overall, again the scatter plot shows us that both total minutes asleep and light active minutes are independent from one another. 
+
+
+## Summary and recommendations based on findings ##
+
+Beallabeat's Time product which tracks a users activity, sleep, and stress. 
+
+Based on our analysis above and visualizations plotted, our insights uncovered that there were some high to medium correlations for total steps, total distance, very active minutes and distance, and lightly active minutes. This lead to other insights when combined with the sleep dataset and categorizing by day. 
+
+Our recommendations are the following:
+
+### Activity Levels
+
+- Bellabeat implement a new feature that encourages users to maintain their activity levels during the middle of the week such as reminders to workout and increased weekend activity. Weak activity levels on Sunday gives Bellabeat an opportunity to improve this area and profit.
+
+### Sleeping Consistency
+
+- Bellabeat introduce games or scores showing sleep quality to maintain consistent sleep time and reduce time in bed. 
+
+### Very Active Minutes 
+
+- Bellabeat can benefit by putting prioritization on very active minutes. Because there is strong correlation for very active minutes and calorie in our correlation chart, Bellabeat can encourage and target users aiming for better weight management to focus more on intense activities such as running.
